@@ -36,12 +36,3 @@ process.on('unhandledRejection', (err) => {
     process.exit(1);
   });
 });
-
-//FOR TESTING PURPOSE ONLY
-// creating our first document using schema rule
-// const testTour = new Tour({
-//   name: 'The Forest Hiker',
-//   rating: 4.9,
-//   price : 1500
-// })
-// testTour.save().then(doc => console.log(doc)).catch(err => console.log('❌❌Error❌❌',err));
