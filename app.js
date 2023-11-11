@@ -46,10 +46,10 @@ if (process.env.NODE_ENV == 'development') {
 
 // To get access to all req.body
 app.use(express.json());
-// app.use(cookiesParser);
+BUG:// app.use(cookiesParser);
 
 // SANITIZE REQUESTED DATA  ..noSql injection allowed
-BUG: app.use(mongoSanitize());
+ app.use(mongoSanitize());
 
 // XSS to sanitize from html code
 app.use(xss()); //DEPRICATED
