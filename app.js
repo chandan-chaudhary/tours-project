@@ -46,10 +46,10 @@ if (process.env.NODE_ENV == 'development') {
 
 // To get access to all req.body
 app.use(express.json());
-app.use(cookiesParser);
+// app.use(cookiesParser);
 
 // SANITIZE REQUESTED DATA  ..noSql injection allowed
-app.use(mongoSanitize());
+BUG: app.use(mongoSanitize());
 
 // XSS to sanitize from html code
 app.use(xss()); //DEPRICATED
@@ -73,9 +73,10 @@ app.use(
 // TEST middleware
 app.use((req, res, next) => {
   // console.log(x);
-  console.log('app.js midlleware..', req.cookies);
+  console.log('app.js midlleware..');
   next();
 });
+// , req.cookies
 
 // ROUTES
 // RENDER PUG TEMPLATES

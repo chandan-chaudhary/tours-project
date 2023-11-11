@@ -2,7 +2,7 @@ const Tour = require('../models/tourModel');
 const appError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsyncErr');
 
-// RENDER OVERVIEW
+// // RENDER OVERVIEW
 exports.getOverview = catchAsync(async (req, res, next) => {
   const tours = await Tour.find();
   if (!tours) {
@@ -13,7 +13,7 @@ exports.getOverview = catchAsync(async (req, res, next) => {
   });
 });
 
-// RENDER TOUR
+// // RENDER TOUR
 exports.getTour = catchAsync(async (req, res, next) => {
   const tour = await Tour.findOne({ slug: req.params.slug }).populate({
     path: 'reviews',

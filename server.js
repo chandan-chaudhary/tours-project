@@ -23,7 +23,7 @@ mongoose.connect(database).then(() => {
 
 // server port and listening
 //   console.log(process.env);
-const port = 3000 || process.env.PORT;
+const port = 3000;
 const server = app.listen(port, () => {
   console.log(`Server ${port}`);
 });

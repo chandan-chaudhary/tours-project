@@ -3,6 +3,7 @@ const Tour = require('./../models/tourModel');
 const APIfeatures = require('./../utils/apiFeatures');
 const catchAsync = require('./../utils/catchAsyncErr');
 const factoryFun = require('./controllerFactory');
+const reviewController = require('./reviewController');
 
 exports.aliasTour = (req, res, next) => {
   req.query.limit = '5';
@@ -12,7 +13,8 @@ exports.aliasTour = (req, res, next) => {
 };
 
 // FIND ALL  TOUR
-exports.getAllTour = catchAsync(async (req, res, next) => {
+exports.getAllTour = async (req, res) => {
+  const tour = await Tour.find();
   const features = new APIfeatures(Tour.find(), req.query)
     .filter()
     .sort()
@@ -30,7 +32,7 @@ exports.getAllTour = catchAsync(async (req, res, next) => {
       data: doc,
     },
   });
-});
+};
 
 // GET TOUR BY ID
 exports.getTourById = factoryFun.getDocbyID(Tour, { path: 'reviews' });
@@ -77,7 +79,6 @@ exports.getTourStats = catchAsync(async (req, res, next) => {
 });
 
 //aggregation monthly-paln
-
 exports.getMonthlyPlan = catchAsync(async (req, res, next) => {
   const year = req.params.year;
   const monthlyPlan = await Tour.aggregate([
@@ -170,26 +171,3 @@ exports.getTourDistance = catchAsync(async (req, res, next) => {
     data: distance,
   });
 });
-
-// check if Id is valid. commented boz mondb itself throw error if we try to access wrong ID
-// exports.checkId = (req, res, next, val) => {
-//   console.log(`tour id: ${val}`);
-//   if (Number(req.params.id) > toursData.length) {
-//     return res.status(404).json({
-//       status: 'failed',
-//       message: 'Invalid Id',
-//     });
-//   }
-//   next();
-// };
-
-// check if if request contain body is valid.
-// exports.checkBody = (req, res, next) => {
-//   if (!req.body.name || !req.body.price) {
-//     return res.status(404).json({
-//       status: 'failed',
-//       message: 'No-content',
-//     });
-//   }
-//   next();
-// };

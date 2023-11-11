@@ -4,24 +4,24 @@ const APIfeatures = require('./../utils/apiFeatures');
 
 // GET ALL DOCUMENTS
 // says route.get() is call back function but get object
-BUG: exports.getAllDoc = (Model) => {
-  catchAsync(async (req, res, next) => {
-    const features = new APIfeatures(Model.find(), req.query)
-      .filter()
-      .sort()
-      .limit()
-      .paginate();
-    const doc = await features.query;
-    //SENDING RRESPONSE
-    res.status(200).json({
-      status: 'success',
-      result: doc.length,
-      data: {
-        data: doc,
-      },
-    });
-  });
-};
+// BUG: exports.getAllDoc = (Model) => {
+//   catchAsync(async (req, res, next) => {
+//     const features = new APIfeatures(Model.find(), req.query)
+//       .filter()
+//       .sort()
+//       .limit()
+//       .paginate();
+//     const doc = await features.query;
+//     //SENDING RRESPONSE
+//     res.status(200).json({
+//       status: 'success',
+//       result: doc.length,
+//       data: {
+//         data: doc,
+//       },
+//     });
+//   });
+// };
 
 exports.getDocbyID = (Model, populateOptn) =>
   catchAsync(async (req, res, next) => {
