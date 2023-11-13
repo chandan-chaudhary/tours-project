@@ -2,12 +2,16 @@
   "name": "nature",
   "version": "1.0.0",
   "description": "createing natours project",
+  "source": "./Public/js/index.js",
   "main": "app.js",
+  "module": "./Public/js/bundle.js",
   "scripts": {
     "start": "nodemon server.js",
     "start:prod": "cross-env NODE_ENV=production nodemon server.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "debug": "ndb server.js"
+    "debug": "ndb server.js",
+    "watch:js": "parcel watch ./Public/js/index.js",
+    "build:js": "parcel watch ./Public/js/index.js"
   },
   "author": "Chandan Chaudhary",
   "license": "ISC",
@@ -41,6 +45,7 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-prettier": "^5.0.0",
     "eslint-plugin-react": "^7.33.2",
+    "parcel": "^2.10.2",
     "prettier": "^3.0.3"
   }
 }
