@@ -1,7 +1,6 @@
 //
 
-const form = document.querySelector('.form');
-const login = async (email, password) => {
+export const login = async (email, password) => {
   try {
     console.log(email, password);
 
@@ -13,15 +12,17 @@ const login = async (email, password) => {
         password,
       },
     });
-    console.log(res);
+
+    // redirecting to home page after user is loggin user
+    if (res.data.status === 'success') {
+      alert('loged in ');
+      window.setTimeout(() => {
+        location.assign('/'); //assign home page after 15 sec
+      }, 1500);
+    }
+    // console.log();
   } catch (err) {
-    console.log(err.response.data);
+    alert(err.response.data.message);
+    // console.log();
   }
 };
-
-form.addEventListener('submit', (e) => {
-  e.preventDefault();
-  const email = document.getElementById('email').value;
-  const password = document.getElementById('password').value;
-  login(email, password);
-});
