@@ -2,9 +2,7 @@
   "name": "nature",
   "version": "1.0.0",
   "description": "createing natours project",
-  "source": "./Public/js/index.js",
   "main": "app.js",
-  "module": "./Public/js/bundle.js",
   "scripts": {
     "start": "nodemon server.js",
     "start:prod": "cross-env NODE_ENV=production nodemon server.js",
@@ -16,9 +14,13 @@
   "author": "Chandan Chaudhary",
   "license": "ISC",
   "dependencies": {
+    "@babel/polyfill": "^7.12.1",
     "@maptiler/sdk": "^1.1.2",
+    "axios": "^1.6.1",
     "bcryptjs": "^2.4.3",
     "cookie-parser": "^1.4.6",
+    "core-js": "^3.33.2",
+    "cors": "^2.8.5",
     "cross-env": "^7.0.3",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",

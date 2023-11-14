@@ -54,7 +54,7 @@ block content
                     +overviewBox('Next date', date, 'calendar')
                     +overviewBox('Difficulty', tour.difficulty, 'trending-up')
                     +overviewBox('Participants', `${tour.maxGroupSize} people`, 'user')
-                    +overviewBox('Next date',`${tour.ratingsAverage} / 5` , 'star')
+                    +overviewBox('Ratings',`${tour.ratingsAverage} / 5` , 'star')
                 .overview-box__group
                     h2.heading-secondary.ma-bt-lg Your tour guides
                     each guide in tour.guides

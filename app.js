@@ -8,6 +8,7 @@ const xss = require('xss-clean');
 const hpp = require('hpp');
 const path = require('path');
 const cookiesParser = require('cookie-parser');
+const cors = require('cors');
 
 // requiring own Model
 const tourRouter = require('./Routes/tourRoutes');
@@ -20,6 +21,7 @@ const viewRouter = require('./Routes/viewRoutes');
 const app = express();
 
 // INJECT PUG VIEW ENGINE
+app.use(cors());
 
 app.set('view engine', 'pug');
 app.set('views', path.join(__dirname, 'views'));
@@ -46,7 +48,7 @@ if (process.env.NODE_ENV == 'development') {
 
 // To get access to all req.body
 app.use(express.json());
-BUG: app.use(cookiesParser());
+app.use(cookiesParser());
 
 // SANITIZE REQUESTED DATA  ..noSql injection allowed
 app.use(mongoSanitize());
