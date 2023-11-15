@@ -6,7 +6,7 @@ const catchAsync = require('../utils/catchAsyncErr');
 exports.getOverview = catchAsync(async (req, res, next) => {
   const tours = await Tour.find();
   if (!tours) {
-    next(new appError('Cant Find doc'));
+    next(new appError('Cant Find doc', 500));
   }
   res.status(200).render('overview', {
     tours,
@@ -19,6 +19,10 @@ exports.getTour = catchAsync(async (req, res, next) => {
     path: 'reviews',
     fields: 'user review rating',
   });
+
+  if (!tour) {
+    next(new appError('no tour found', 500));
+  }
 
   res.status(200).render('tour', {
     title: `${tour.name} tour`,

@@ -8,9 +8,9 @@ const handleObjectIdErrorDB = (err) => {
 
 // Error for Duplicate Fields
 const handleDuplicateFeilds = (err) => {
-  const message = `Duplicate ${Object.keys(err.keyValue)}: ${
-    Object.values(err.keyValue)
-  }`;
+  const message = `Duplicate ${Object.keys(err.keyValue)}: ${Object.values(
+    err.keyValue,
+  )}`;
   return new appError(message, 400);
 };
 
@@ -31,31 +31,54 @@ const handleExpiredJWT = (err) => {
 };
 
 //Development Error structure
-const sendErrDevelopment = (err, res) => {
-  res.status(err.statusCode).json({
-    status: err.status,
-    message: err.message,
-    Error: err,
-    Stack: err.stack,
+const sendErrDevelopment = (err, req, res) => {
+  // API
+  if (req.originalUrl.startsWith('/api')) {
+    return res.status(err.statusCode).json({
+      status: err.status,
+      message: err.message,
+      Error: err,
+      Stack: err.stack,
+    });
+  }
+  // RENDER WEBSITE
+  console.log('mmm', err);
+  return res.status(err.statusCode).render('error', {
+    title: 'error',
+    message: 'No tour with that name',
   });
 };
 
-//Production Error structure
-const sendErrproduction = (err, res) => {
+//PRODUCTION Error structure
+const sendErrproduction = (err, req, res) => {
   // isoperational is coming from appError to sent a safe error message to client.
-  if (err.isOperational) {
-    res.status(err.statusCode).json({
-      status: err.status,
-      message: err.message,
-    });
-  } else {
-    console.log('mmm', err);
+  // API
+  if (req.originalUrl.startsWith('/api')) {
+    if (err.isOperational) {
+      return res.status(err.statusCode).json({
+        status: err.status,
+        message: err.message,
+      });
+    }
     //Error from external packages or internal server error.
-    res.status(500).json({
+    console.log('mmm', err);
+    return res.status(500).json({
       status: 'error',
       message: 'something went wrong',
     });
   }
+  // RENDER WEBSITE
+  if (err.isOperational) {
+    return res.status(err.statusCode).json({
+      status: err.status,
+      message: err.message,
+    });
+  }
+  console.log('mmm', err);
+  return res.status(err.statusCode).render('error', {
+    title: 'error',
+    message: 'please try again later',
+  });
 };
 
 // Error middleware by express
@@ -65,7 +88,7 @@ module.exports = (err, req, res, next) => {
 
   if (process.env.NODE_ENV === 'development') {
     console.log(err.name);
-    sendErrDevelopment(err, res);
+    sendErrDevelopment(err, req, res);
   } else if (process.env.NODE_ENV === 'production') {
     let error = { ...err };
     // console.log('ERROR‼️‼️', error._message); // err.name is not showing in error object
@@ -85,7 +108,7 @@ module.exports = (err, req, res, next) => {
     if (error.name === 'TokenExpiredError') {
       error = handleExpiredJWT(error);
     }
-    sendErrproduction(error, res);
+    sendErrproduction(error, req, res);
   }
   next();
 };

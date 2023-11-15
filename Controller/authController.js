@@ -75,6 +75,16 @@ exports.login = catchAsync(async (req, res, next) => {
   // });
 });
 
+// LOGOUT
+exports.logout = async (req, res) => {
+  res.cookie('jwt', 'logged-out', {
+    expires: new Date(Date.now() + 10 * 1000), //10 seconds
+    httpOnly: true,
+  });
+
+  res.status(200).json({ status: 'success' });
+};
+
 // Give permision to login user to get all routes
 exports.protectRoutes = catchAsync(async (req, res, next) => {
   // check if token is avaiable
@@ -120,36 +130,40 @@ exports.protectRoutes = catchAsync(async (req, res, next) => {
 });
 
 //
-exports.isLoggedIn = catchAsync(async (req, res, next) => {
+exports.isLoggedIn = async (req, res, next) => {
   // check token in cookies ..if available
   if (req.cookies.jwt) {
-    //verify Token
-    const decodedFields = await promisify(jwt.verify)(
-      req.cookies.jwt,
-      process.env.JWT_SECRET,
-    );
+    try {
+      //verify Token
+      const decodedFields = await promisify(jwt.verify)(
+        req.cookies.jwt,
+        process.env.JWT_SECRET,
+      );
 
-    // check if user Exist
-    const loggedUser = await User.findById(decodedFields.id);
-    // console.log(loggedUser);
-    if (!loggedUser) {
+      // check if user Exist
+      const loggedUser = await User.findById(decodedFields.id);
+      // console.log(loggedUser);
+      if (!loggedUser) {
+        return next();
+      }
+
+      // check if password was updated after token was created
+      //decodedFields.iat means created at
+      // const logActivity =  loggedUser.updatedPassword(decodedFields.iat);
+      if (loggedUser.updatedPassword(decodedFields.iat)) {
+        return next();
+      }
+
+      //GRANT access to proctected Routes
+      res.locals.user = loggedUser;
+      // req.user = loggedUser;
+      return next();
+    } catch (err) {
       return next();
     }
-
-    // check if password was updated after token was created
-    //decodedFields.iat means created at
-    // const logActivity =  loggedUser.updatedPassword(decodedFields.iat);
-    if (loggedUser.updatedPassword(decodedFields.iat)) {
-      return next();
-    }
-
-    //GRANT access to proctected Routes
-    res.locals.user = loggedUser;
-    // req.user = loggedUser;
-    return next();
   }
   next();
-});
+};
 
 // resctrict users to make changement in tours.
 exports.restrictRoutes = (...roles) => {

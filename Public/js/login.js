@@ -4,6 +4,28 @@
 //
 
 const form = document.querySelector('.form');
+const logOutBtn = document.querySelector('.nav__el--logout');
+
+const logOut = async () => {
+  try {
+    const res = await axios({
+      method: 'GET',
+      url: 'http://localhost:3000/api/v1/users/logout',
+    });
+
+    if (res.data.status === 'success') {
+      // this will hard reload from server and will updated jwt cookies...
+      // Reload from cache will reolad the same page as its is being displayed
+      location.reload(true);
+    }
+  } catch (err) {
+    showAlert('error', 'error cannot logout');
+  }
+};
+
+if (logOutBtn) {
+  logOutBtn.addEventListener('click', logOut);
+}
 
 const login = async (email, password) => {
   try {
@@ -20,14 +42,14 @@ const login = async (email, password) => {
 
     // redirecting to home page after user is loggin user
     if (res.data.status === 'success') {
-      alertBox('success', 'logged in ');
+      showAlert('success', 'logged in ');
       window.setTimeout(() => {
         location.assign('/'); //assign home page after 15 sec
       }, 1500);
     }
     // console.log();
   } catch (err) {
-    alertBox('error', err.response.data.message);
+    showAlert('error', err.response.data.message);
     // console.log();
   }
 };
@@ -42,7 +64,7 @@ if (form) {
   });
 }
 
-const alertBox = (type, msg) => {
+const showAlert = (type, msg) => {
   const markup = `<div class ="alert alert--${type}">${msg}</div>`;
   document.querySelector('body').insertAdjacentHTML('afterbegin', markup);
   window.setTimeout(hideAlert, 5000);
