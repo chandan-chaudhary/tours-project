@@ -1,4 +1,6 @@
 const Tour = require("../models/tourModel");
+const User = require("../models/userModel");
+
 const appError = require("../utils/appError");
 const catchAsync = require("../utils/catchAsyncErr");
 
@@ -39,5 +41,21 @@ exports.loginUser = catchAsync(async (req, res, next) => {
 exports.myAccount = catchAsync(async (req, res, next) => {
   res.status(200).render("personalDetail", {
     title: "My Account",
+  });
+});
+
+exports.getUserData = catchAsync(async (req, res, next) => {
+  const updatedUser = await User.findByIdAndUpdate(
+    req.user.id,
+    {
+      name: req.body.name,
+      email: req.body.email,
+    },
+    { new: true, runValidators: true }
+  );
+  res.status(200).render("personalDetail", {
+    title: "My Account",
+    // assign user to updatedUser , if we leave as it is thenit will take user from protected routes
+    user: updatedUser,
   });
 });

@@ -1,9 +1,9 @@
 // import '@babel/polyfill';
 // // import 'core-js/stable';
-// import axios from 'axios';
+// import axios from "axios";
 //
 
-const form = document.querySelector(".form");
+const form = document.querySelector(".form--login");
 const logOutBtn = document.querySelector(".nav__el--logout");
 
 const logOut = async () => {
