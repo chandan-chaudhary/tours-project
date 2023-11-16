@@ -38,6 +38,6 @@ exports.loginUser = catchAsync(async (req, res, next) => {
 
 exports.myAccount = catchAsync(async (req, res, next) => {
   res.status(200).render("personalDetail", {
-    title: "my Account",
+    title: "My Account",
   });
 });
