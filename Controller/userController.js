@@ -5,8 +5,11 @@ const catchAsync = require('../utils/catchAsyncErr');
 const User = require('./../models/userModel');
 const factoryFun = require('./controllerFactory');
 
-// multer storage
+// MULTER STORAGE
+// 1) SAVING PHOTO INTO BUFFER
 const multerStorage = multer.memoryStorage();
+
+// 2) SAVING PHOTO INTO DISK STORAGE
 // const multerStorage = multer.diskStorage({
 //   destination: (req, file, callback) => {
 //     callback(null, 'Public/img/users');
@@ -28,19 +31,28 @@ const multerFilter = (req, file, callback) => {
   }
 };
 
+// Create upload multer
 const upload = multer({ storage: multerStorage, fileFilter: multerFilter });
 
+//UPLOAD USER-PHOTO to photo field
 exports.uploadUserFile = upload.single('photo');
 
+// RESIZE USER PHOTO
 exports.resizeUserPhoto = (req, res, next) => {
   if (!req.file) return next();
+  //assign filename  into req.file..becoz buffer content do not have filename init
+  req.file.filename = `user-${req.user._id}-${Date.now()}.jpeg`;
 
+  // resize, compress and set pic type..
   sharp(req.file.buffer)
     .resize(500, 500)
     .toFormat('jpeg')
     .jpeg({ quality: 90 })
-    .toFile(`user-${req.user._id}-${date}.${extension}`);
+    .toFile(`Public/img/users/${req.file.filename}`);
+
+  next();
 };
+
 // TO filter fileds while updating logged user
 const filterdObj = (obj, ...allowedFields) => {
   const updatedObj = {};

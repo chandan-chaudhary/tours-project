@@ -22,6 +22,7 @@ Router.get(
 Router.patch(
   '/update-logged-user',
   userHandler.uploadUserFile,
+  userHandler.resizeUserPhoto,
   userHandler.updateLoggedUser,
 );
 Router.patch('/updatepassword', authController.updatePassword);
