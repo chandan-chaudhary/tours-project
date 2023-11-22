@@ -1,8 +1,46 @@
+const multer = require('multer');
+const sharp = require('sharp');
 const appError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsyncErr');
 const User = require('./../models/userModel');
 const factoryFun = require('./controllerFactory');
 
+// multer storage
+const multerStorage = multer.memoryStorage();
+// const multerStorage = multer.diskStorage({
+//   destination: (req, file, callback) => {
+//     callback(null, 'Public/img/users');
+//   },
+//   filename: (req, file, callback) => {
+//     // create filename eg-> user-user_id-date.extension
+//     const extension = file.mimetype.split('/')[1];
+//     const date = Date.now();
+//     callback(null, `user-${req.user._id}-${date}.${extension}`);
+//   },
+// });
+
+// Multer filter for only image type
+const multerFilter = (req, file, callback) => {
+  if (file.mimetype.startsWith('image')) {
+    callback(null, true);
+  } else {
+    callback(new appError('Not an image! please provide image', 400), false);
+  }
+};
+
+const upload = multer({ storage: multerStorage, fileFilter: multerFilter });
+
+exports.uploadUserFile = upload.single('photo');
+
+exports.resizeUserPhoto = (req, res, next) => {
+  if (!req.file) return next();
+
+  sharp(req.file.buffer)
+    .resize(500, 500)
+    .toFormat('jpeg')
+    .jpeg({ quality: 90 })
+    .toFile(`user-${req.user._id}-${date}.${extension}`);
+};
 // TO filter fileds while updating logged user
 const filterdObj = (obj, ...allowedFields) => {
   const updatedObj = {};
@@ -31,6 +69,9 @@ exports.updateLoggedUser = catchAsync(async (req, res, next) => {
     );
   }
   const filterdUserData = filterdObj(req.body, 'name', 'email');
+  if (req.file) {
+    filterdUserData.photo = req.file.filename;
+  }
 
   const updatedUser = await User.findByIdAndUpdate(
     req.user.id,
