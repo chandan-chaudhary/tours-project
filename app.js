@@ -48,7 +48,7 @@ if (process.env.NODE_ENV == "development") {
 
 // To get access to all req.body
 app.use(express.json());
-app.use(express.urlencoded());
+app.use(express.urlencoded());  //deprecated
 app.use(cookiesParser());
 
 // SANITIZE REQUESTED DATA  ..noSql injection allowed

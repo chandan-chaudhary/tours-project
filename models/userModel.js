@@ -54,26 +54,26 @@ const userSchema = new mongoose.Schema({
 
 // DOCUMENT MIDDLEWARE
 // update passwordupdatedAt fileds in database
-// userSchema.pre('save', function (next) {
-//   if (!this.isModified('password') || this.isNew) return next();
-//   // 1 sec before the operation bcoz passwordUpdatedAt should be less then token timestamp
-//   this.passwordUpdatedAt = Date.now() - 1000;
-//   next();
-// });
+userSchema.pre('save', function (next) {
+  if (!this.isModified('password') || this.isNew) return next();
+  // 1 sec before the operation bcoz passwordUpdatedAt should be less then token timestamp
+  this.passwordUpdatedAt = Date.now() - 1000;
+  next();
+});
 
 // //Encrypt password
-// userSchema.pre('save', async function (next) {
-//   // check if current password was modified/updated
-//   if (!this.isModified('password')) return next();
+userSchema.pre('save', async function (next) {
+  // check if current password was modified/updated
+  if (!this.isModified('password')) return next();
 
-//   // encrypting password
-//   this.password = await bcrypt.hash(this.password, 12);
+  // encrypting password
+  this.password = await bcrypt.hash(this.password, 12);
 
-//   //Deleting confirmPassword fields
-//   // confirmPassword field we do not need in databse, its only for confirmation purpose only user need to provide to match with current password
-//   this.confirmPassword = undefined;
-//   next();
-// });
+  //Deleting confirmPassword fields
+  // confirmPassword field we do not need in databse, its only for confirmation purpose only user need to provide to match with current password
+  this.confirmPassword = undefined;
+  next();
+});
 
 // QUERY MIDDLEWARE
 userSchema.pre(/^find/, function (next) {

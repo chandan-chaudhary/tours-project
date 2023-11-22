@@ -1,7 +1,10 @@
 const express = require('express');
+const multer = require('multer');
 const Router = express.Router();
 const userHandler = require('./../Controller/userController');
 const authController = require('./../Controller/authController');
+
+const upload = multer({ dest: 'Public/img/users' });
 //Auth controller routes
 Router.post('/signup', authController.signUp);
 Router.post('/login', authController.login);
@@ -18,11 +21,11 @@ Router.get(
   userHandler.getUserbyId,
 );
 
-Router.patch('/update-logged-user', userHandler.updateLoggedUser);
+Router.patch('/update-logged-user',upload.single('photo'), userHandler.updateLoggedUser);
 Router.patch('/updatepassword', authController.updatePassword);
 Router.delete('/delete-logged-user', userHandler.DeleteLoggedUser);
 
-// RESTRICTING ROUTES.. only admin can make change
+// RESTRICTING ROUTES.. only admin can make change into these routes
 Router.use(authController.restrictRoutes('admin'));
 
 // routing to fetch users data.. and manupulate Users.
