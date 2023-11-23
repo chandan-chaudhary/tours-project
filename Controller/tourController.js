@@ -1,9 +1,59 @@
+const multer = require('multer');
+const sharp = require('sharp');
 const appError = require('../utils/appError');
 const Tour = require('./../models/tourModel');
 const APIfeatures = require('./../utils/apiFeatures');
 const catchAsync = require('./../utils/catchAsyncErr');
 const factoryFun = require('./controllerFactory');
 const reviewController = require('./reviewController');
+
+// MULTER STORAGE
+// 1) SAVING PHOTO INTO BUFFER
+const multerStorage = multer.memoryStorage();
+
+// Multer filter for only image type
+const multerFilter = (req, file, callback) => {
+  if (file.mimetype.startsWith('image')) {
+    callback(null, true);
+  } else {
+    callback(new appError('Not an image! please provide image', 400), false);
+  }
+};
+
+// Create upload multer
+const upload = multer({ storage: multerStorage, fileFilter: multerFilter });
+
+exports.uploadTourImages = upload.fields([
+  { name: 'imageCover', maxCount: 1 },
+  { name: 'images', maxCount: 3 },
+]);
+
+exports.resizeTourImages = async (req, res, next) => {
+  // console.log(req.files); //we need to do req.files becoz we are uploading multiple files
+  //  IMAGE-COVER
+  req.body.imageCover = `tour-${req.params.id}-${Date.now()}-cover.jpeg`;
+  await sharp(req.files.imageCover[0].buffer)
+    .resize(2000, 1333)
+    .toFormat('jpeg')
+    .jpeg({ quality: 90 })
+    .toFile(`Public/img/tours/${req.body.imageCover}`);
+
+  //  IMAGES
+  req.body.images = [];
+  //while handling promise with each file we need to map each doc which internally saves each one into array and await at once
+  await Promise.all(
+    req.files.images.map(async (file, i) => {
+      const filename = `tour-${req.params.id}-${Date.now()}-${i + 1}.jpeg`;
+      await sharp(file.buffer)
+        .resize(2000, 1333)
+        .toFormat('jpeg')
+        .jpeg({ quality: 90 })
+        .toFile(`Public/img/tours/${filename}`);
+      req.body.images.push(filename);
+    }),
+  );
+  next();
+};
 
 exports.aliasTour = (req, res, next) => {
   req.query.limit = '5';
