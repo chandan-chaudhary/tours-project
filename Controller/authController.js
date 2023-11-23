@@ -4,7 +4,7 @@ const { promisify } = require('util');
 const User = require('./../models/userModel');
 const catchAsync = require('./../utils/catchAsyncErr');
 const appError = require('./../utils/appError');
-const sendMail = require('./../utils/email');
+const Email = require('./../utils/email');
 const crypto = require('crypto');
 
 // CREATING WEB_TOKEN
@@ -49,6 +49,9 @@ exports.signUp = catchAsync(async (req, res, next) => {
     role: req.body.role,
     passwordUpdatedAt: req.body.passwordUpdatedAt,
   });
+  const url = `${req.protocol}://${req.get('host')}/myProfile`;
+  console.log(url);
+  await new Email(newUser, url).sendWelcome();
   createTOKENandSendRESPONSE(newUser, 201, res);
 });
 
@@ -196,11 +199,6 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
   console.log(tokenURL);
   //  SEND mail options
   try {
-    await sendMail({
-      email: user.email,
-      subject: 'request for password reset. valid for 10 min',
-      message,
-    });
     res.status(200).json({
       status: 'success',
       message: 'token sent to gmail',
