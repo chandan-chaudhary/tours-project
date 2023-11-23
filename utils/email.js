@@ -1,8 +1,11 @@
 const nodemailer = require('nodemailer');
 const pug = require('pug');
-const htmlTotext = require('html-to-text');
+const { convert } = require('html-to-text');
 const path = require('path');
 
+// `${__dirname}/../views/emails/${template}`;
+// const file = fs.readFileSync(`${__dirname}/../views/emails/${template}`);
+// path.join(__dirname, '..', 'views', 'emails', `${template}`),
 // send actual mail
 module.exports = class Email {
   constructor(user, url) {
@@ -12,25 +15,25 @@ module.exports = class Email {
     this.from = `chandan <${process.env.EMAIL_FROM}>`;
   }
 
-  async newTransport() {
+  newTransport() {
     if (process.env.NODE_ENV === 'production') {
       return;
     }
 
-    return (transporter = nodemailer.createTransport({
+    return nodemailer.createTransport({
       host: process.env.EMAIL_HOST,
       port: process.env.EMAIL_PORT,
       auth: {
         user: process.env.EMAIL_USERNAME,
         pass: process.env.EMAIL_PASSWORD,
       },
-    }));
+    });
   }
 
   async send(template, subject) {
     // render HTML
     const html = pug.renderFile(
-      path.join(__dirname, '..', 'views', 'emails', `${template}`),
+      path.join(__dirname, '..', 'views', 'emails', `${template}.pug`),
       {
         firstName: this.firstname,
         url: this.url,
@@ -43,14 +46,15 @@ module.exports = class Email {
       from: this.from,
       to: this.to,
       subject,
-      text: htmlTotext.fromString(html),
+      text: convert(html),
     };
 
     // create TRANSPORT and SEND MAIL
-    await newTransport.sendMail(mailOptions);
+    await this.newTransport().sendMail(mailOptions);
   }
 
   async sendWelcome() {
+    // console.log()
     await this.send(
       'welcome',
       'Welcome to the world of tour, here you can chosse destination for your trip',
