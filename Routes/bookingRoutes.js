@@ -5,9 +5,9 @@ const authController = require('./../Controller/authController');
 const Router = express.Router();
 
 Router.get(
-  '/checkout-booking/:tourId',
+  '/checkout-session/:tourId',
   authController.protectRoutes,
-  bookingController.getTourBooking,
+  bookingController.getCheckoutSession,
 );
 
 module.exports = Router;
