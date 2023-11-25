@@ -193,13 +193,16 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
   //create a token and save the modified doc
   const resetToken = user.passwordResetToken();
   await user.save({ validateBeforeSave: false });
-  const tokenURL = `${req.protocol}://${req.get(
-    'host',
-  )}/api/v1/users/resetpassword/${resetToken}`;
-  const message = `Please reset your password ${tokenURL}, valid for 10 min.\n If please ignore if already done`;
-  console.log(tokenURL);
-  //  SEND mail options
+
+  // const message = `Please reset your password ${tokenURL}, valid for 10 min.\n If please ignore if already done`;
+  // console.log(tokenURL);
   try {
+    // GENERATE URL FOR RESTE TOKEN
+    const tokenURL = `${req.protocol}://${req.get(
+      'host',
+    )}/api/v1/users/resetpassword/${resetToken}`;
+    //  SEND mail options
+    new Email(user, tokenURL).sendResetPassword();
     res.status(200).json({
       status: 'success',
       message: 'token sent to gmail',

@@ -60,6 +60,10 @@ module.exports = class Email {
       'Welcome to the world of tour, here you can chosse destination for your trip',
     );
   }
+
+  async sendResetPassword() {
+    await this.send('resetPassword', 'Reset your password (Valid for 10 min)');
+  }
 };
 
 // const sendMail = async (options) => {
