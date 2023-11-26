@@ -4,9 +4,9 @@
 //
 
 // const client_key =;
-// const stripe = Stripe(
-//   pk_test_51OGE3tSDYixnJC7yC3vkHJhbtg6ia787MVWWkzBpW0VxUyCvZZ0r0WbHD7a9ZQMUe3aDQXLVCpK4bWipLe9ko8nQ001LKDf8Ck,
-// );
+const stripe = Stripe(
+  'pk_test_51OGE3tSDYixnJC7yC3vkHJhbtg6ia787MVWWkzBpW0VxUyCvZZ0r0WbHD7a9ZQMUe3aDQXLVCpK4bWipLe9ko8nQ001LKDf8Ck',
+);
 
 const form = document.querySelector('.form--login');
 const logOutBtn = document.querySelector('.nav__el--logout');
@@ -128,17 +128,27 @@ if (userPasswordForm) {
 }
 
 // STRIPE SESSION
-
 const bookTour = async (tourId) => {
-  const session = await axios(
-    `http://localhost:3000/api/v1/bookings/checkout-session/${tourId}`,
-  );
-  console.log(session);
+  try {
+    // get session from backend API
+    const session = await axios(
+      `http://localhost:3000/api/v1/bookings/checkout-session/${tourId}`,
+    );
+
+    // create checkout form and checkout payment
+    await stripe.redirectToCheckout({
+      sessionId : session.data.session.id,
+    })
+    console.log(session);
+  } catch (err) {
+    showAlert('error', err.message);
+  }
 };
 
 if (bookTourBtn) {
   bookTourBtn.addEventListener('click', (e) => {
-    e.preventDefault();
+    // e.preventDefault();
+    e.target.textContent = 'Processing...';
     // e.target response to the event got triggred.. so btn have data like data-tour-id where tour-id automatically becomes tourId in javascript
     const { tourId } = e.target.dataset;
     bookTour(tourId);

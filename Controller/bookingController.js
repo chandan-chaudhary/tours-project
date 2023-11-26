@@ -22,10 +22,12 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
           currency: 'INR',
           product_data: {
             name: `${tour.name} tour`,
+            images: [
+              `https://www.natours.dev/img/tours/${tour.imageCover}.jpg`,
+            ],
           },
         },
         // description: tour.summary,
-        // images: [`https://www.natours.dev/img/tours/${tour.imageCover}.jpg`],
         quantity: 1,
       },
     ],
