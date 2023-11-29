@@ -19,10 +19,11 @@ Router.get(
   authController.protectRoutes,
   viewController.myAccount,
 );
-// Router.post(
-//   "/submit-user-data",
-//   authController.protectRoutes,
-//   viewController.getUserData
-// );
+Router.get('/my-tours', authController.protectRoutes, viewController.getMyTour);
+Router.post(
+  '/submit-user-data',
+  authController.protectRoutes,
+  viewController.getUserData,
+);
 
 module.exports = Router;

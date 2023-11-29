@@ -3,6 +3,7 @@ const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const catchAsync = require('./../utils/catchAsyncErr');
 const appError = require('./../utils/appError');
 const Booking = require('../models/bookingModel');
+const factoryFun = require('./controllerFactory');
 // PAYMENT CHECKOUT
 exports.getCheckoutSession = catchAsync(async (req, res, next) => {
   // Get tour which is to be booked
@@ -56,3 +57,19 @@ exports.createBookingTour = catchAsync(async (req, res, next) => {
   console.log('url', req.originalUrl.split('?')[0]);
   res.redirect(req.originalUrl.split('?')[0]);
 });
+
+exports.getAllDoc = catchAsync(async (req, res, next) => {
+  const docs = await Booking.find();
+  if (!docs) return next(new appError('No booking are curently avilable', 400));
+
+  res.status(200).json({
+    status: 'success',
+    total: docs.length,
+    Docs: docs,
+  });
+});
+// exports.getAllBooking = factoryFun.getAllDoc(Booking);
+exports.getBookingById = factoryFun.getDocbyID(Booking);
+exports.createBooking = factoryFun.createDoc(Booking);
+exports.updateBooking = factoryFun.updateDoc(Booking);
+exports.deleteBooking = factoryFun.deleteDoc(Booking);

@@ -3,6 +3,20 @@ const appError = require('./../utils/appError');
 const APIfeatures = require('./../utils/apiFeatures');
 
 // GET ALL DOCUMENTS
+
+// SAME BUG AS PREVIOUS
+// exports.getAllDoc = (Model) => {
+//   catchAsync(async (req, res, next) => {
+//     const docs = await Model.find();
+//     // if (!Model)
+//     //   return next(new appError('No booking are curently avilable', 400));
+
+//     res.status(200).json({
+//       status: 'success',
+//       Docs: docs,
+//     });
+//   });
+// };
 // says route.get() is call back function but get object
 // BUG: exports.getAllDoc = (Model) => {
 //   catchAsync(async (req, res, next) => {

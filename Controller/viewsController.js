@@ -1,5 +1,6 @@
 const Tour = require('../models/tourModel');
 const User = require('../models/userModel');
+const Booking = require('../models/bookingModel');
 
 const appError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsyncErr');
@@ -57,5 +58,19 @@ exports.getUserData = catchAsync(async (req, res, next) => {
     title: 'My Account',
     // assign user to updatedUser , if we leave as it is thenit will take user from protected routes
     user: updatedUser,
+  });
+});
+
+exports.getMyTour = catchAsync(async (req, res, next) => {
+  // get all bookings
+  const bookings = await Booking.find({ user: req.user.id });
+
+  // get all booked tour
+  const tourIds = bookings.map((el) => el.tour);
+  const tours = await Tour.find({ _id: { $in: tourIds } });
+
+  res.status(200).render('overview', {
+    title: 'My tours',
+    tours,
   });
 });
