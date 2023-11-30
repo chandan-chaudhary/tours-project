@@ -9,6 +9,7 @@ const hpp = require('hpp');
 const path = require('path');
 const cookiesParser = require('cookie-parser');
 const cors = require('cors');
+const compression = require('compression');
 
 // requiring own Model
 const tourRouter = require('./Routes/tourRoutes');
@@ -73,6 +74,8 @@ app.use(
     ],
   }),
 );
+
+app.use(compression());
 
 // TEST middleware
 // app.use((req, res, next) => {
