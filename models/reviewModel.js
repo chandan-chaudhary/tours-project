@@ -57,7 +57,7 @@ reviewSchema.statics.calcAvgRating = async function (tourId) {
       },
     },
   ]);
-  console.log(avgRatingStats);
+  // console.log(avgRatingStats);
   if (avgRatingStats.length > 0) {
     await Tour.findByIdAndUpdate(tourId, {
       ratingsQuantity: avgRatingStats[0].nRating,
@@ -78,12 +78,12 @@ reviewSchema.post('save', function () {
 reviewSchema.pre(/^findOneAnd/, async function (next) {
   // const query = this.getQuery();
   this.rev = await this.findOne().clone(); //without clone findOne() says query is already excuted.
-  console.log(this.rev.tour);
+  // console.log(this.rev.tour);
   next();
 });
 
-FIXME: reviewSchema.post(/^findOneAnd/, async function (doc, next) {
-  console.log('hello', this.rev.tour, doc);
+reviewSchema.post(/^findOneAnd/, async function (doc, next) {
+  // console.log('hello', this.rev.tour, doc);
   this.constructor.calcAvgRating(this.rev.tour);
   next();
 });

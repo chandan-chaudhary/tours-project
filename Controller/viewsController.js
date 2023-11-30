@@ -5,7 +5,7 @@ const Booking = require('../models/bookingModel');
 const appError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsyncErr');
 
-// // RENDER OVERVIEW
+// OVERVIEW PAGE
 exports.getOverview = catchAsync(async (req, res, next) => {
   const tours = await Tour.find();
   if (!tours) {
@@ -16,11 +16,11 @@ exports.getOverview = catchAsync(async (req, res, next) => {
   });
 });
 
-// // RENDER TOUR
+// TOUR PAGE
 exports.getTour = catchAsync(async (req, res, next) => {
   const tour = await Tour.findOne({ slug: req.params.slug }).populate({
     path: 'reviews',
-    fields: 'user review rating name photo',
+    fields: 'user review rating',
   });
 
   if (!tour) {
@@ -33,18 +33,21 @@ exports.getTour = catchAsync(async (req, res, next) => {
   });
 });
 
+// LOGIN USER PAGE
 exports.loginUser = catchAsync(async (req, res, next) => {
   res.status(200).render('login', {
     title: 'Log into your account',
   });
 });
 
+// PERSONAL DETAIL PAGE
 exports.myAccount = catchAsync(async (req, res, next) => {
   res.status(200).render('personalDetail', {
     title: 'My Account',
   });
 });
 
+// UPDATE USER DATA PAGE
 exports.getUserData = catchAsync(async (req, res, next) => {
   const updatedUser = await User.findByIdAndUpdate(
     req.user.id,
@@ -61,6 +64,7 @@ exports.getUserData = catchAsync(async (req, res, next) => {
   });
 });
 
+// BOOKING TOUR PAGE
 exports.getMyTour = catchAsync(async (req, res, next) => {
   // get all bookings
   const bookings = await Booking.find({ user: req.user.id });

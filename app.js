@@ -32,7 +32,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(express.static(path.join(__dirname, 'Public')));
 //SECURITY HTTP HEADERS
 app.use(helmet({ contentSecurityPolicy: false }));
-console.log('from app.js', process.env.NODE_ENV);
+// console.log('from app.js', process.env.NODE_ENV);
 
 // LIMITING request on same API
 const limitter = rateLimit({
@@ -49,7 +49,7 @@ if (process.env.NODE_ENV == 'development') {
 
 // To get access to all req.body
 app.use(express.json());
-app.use(express.urlencoded()); //deprecated
+app.use(express.urlencoded({ extended: true }));
 app.use(cookiesParser());
 
 // SANITIZE REQUESTED DATA  ..noSql injection allowed
@@ -75,17 +75,17 @@ app.use(
 );
 
 // TEST middleware
-app.use((req, res, next) => {
-  // console.log(x);
-  console.log('app.js midlleware..', req.cookies);
-  next();
-});
+// app.use((req, res, next) => {
+//   // console.log(x);
+//   console.log('app.js midlleware..', req.cookies);
+//   next();
+// });
 
 // ROUTES
 // RENDER PUG TEMPLATES
 app.use('/', viewRouter);
 
-//Mounting router over routes..
+//MOUNTING router over routes..
 app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/reviews', reviewRouter);

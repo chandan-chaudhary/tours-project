@@ -50,7 +50,7 @@ exports.signUp = catchAsync(async (req, res, next) => {
     passwordUpdatedAt: req.body.passwordUpdatedAt,
   });
   const url = `${req.protocol}://${req.get('host')}/myProfile`;
-  console.log(url);
+  // console.log(url);
 
   await new Email(newUser, url).sendWelcome();
   createTOKENandSendRESPONSE(newUser, 201, res);
@@ -59,7 +59,7 @@ exports.signUp = catchAsync(async (req, res, next) => {
 //LOGIN USER
 exports.login = catchAsync(async (req, res, next) => {
   const { email, password } = req.body;
-  console.log(email, password);
+  // console.log(email, password);
 
   //in case no email or password
   if (!email || !password) {

@@ -19,7 +19,7 @@ const logOut = async () => {
   try {
     const res = await axios({
       method: 'GET',
-      url: 'http://localhost:3000/api/v1/users/logout',
+      url: 'http://127.0.0.1:3000/api/v1/users/logout',
     });
 
     if (res.data.status === 'success') {
@@ -40,11 +40,11 @@ if (logOutBtn) {
 // LOGIN USER
 const login = async (email, password) => {
   try {
-    console.log(email, password);
+    // console.log(email, password);
 
     const res = await axios({
       method: 'POST',
-      url: 'http://localhost:3000/api/v1/users/login',
+      url: 'http://127.0.0.1:3000/api/v1/users/login',
       data: {
         email,
         password,
@@ -61,7 +61,7 @@ const login = async (email, password) => {
     // console.log();
   } catch (err) {
     showAlert('error', err.response.data.message);
-    console.log('login', err);
+    // console.log('login', err);
   }
 };
 
@@ -80,8 +80,8 @@ const updateSettings = async (data, type) => {
     // mention url
     const url =
       type === 'password'
-        ? 'http://localhost:3000/api/v1/users/updatepassword'
-        : 'http://localhost:3000/api/v1/users/update-logged-user';
+        ? 'http://127.0.0.1:3000/api/v1/users/updatepassword'
+        : 'http://127.0.0.1:3000/api/v1/users/update-logged-user';
     // send response
     const res = await axios({
       method: 'PATCH',
@@ -132,14 +132,14 @@ const bookTour = async (tourId) => {
   try {
     // get session from backend API
     const session = await axios(
-      `http://localhost:3000/api/v1/bookings/checkout-session/${tourId}`,
+      `http://127.0.0.1:3000/api/v1/bookings/checkout-session/${tourId}`,
     );
 
     // create checkout form and checkout payment
     await stripe.redirectToCheckout({
-      sessionId : session.data.session.id,
-    })
-    console.log(session);
+      sessionId: session.data.session.id,
+    });
+    // console.log(session);
   } catch (err) {
     showAlert('error', err.message);
   }

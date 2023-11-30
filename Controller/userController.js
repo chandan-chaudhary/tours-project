@@ -70,8 +70,8 @@ exports.getLoggedUser = (req, res, next) => {
 
 // UPDATE LOGGED IN USER
 exports.updateLoggedUser = catchAsync(async (req, res, next) => {
-  console.log(req.file);
-  console.log(req.body);
+  // console.log(req.file);
+  // console.log(req.body);
   // Error if user provide any password field
   if (req.body.password || req.body.confirmPasword) {
     return next(

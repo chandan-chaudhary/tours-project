@@ -1,10 +1,8 @@
-// import * as maptilersdk from '@maptiler/sdk';
-// /* eslint disable */
-// const maptilersdk = require('@maptiler/sdk');
 const mapBox = document.getElementById('map');
+
 if (mapBox) {
   const locations = JSON.parse(mapBox.dataset.location);
-  console.log(locations);
+  // console.log(locations);
 
   maptilersdk.config.apiKey = 'Vjp2mA38P9kXjS7WVQTc';
   const map = new maptilersdk.Map({

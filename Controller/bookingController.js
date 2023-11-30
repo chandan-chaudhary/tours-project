@@ -54,7 +54,7 @@ exports.createBookingTour = catchAsync(async (req, res, next) => {
 
   await Booking.create({ tour, user, price });
   // `${req.protocol}://${req.get('host')}/`
-  console.log('url', req.originalUrl.split('?')[0]);
+  // console.log('url', req.originalUrl.split('?')[0]);
   res.redirect(req.originalUrl.split('?')[0]);
 });
 

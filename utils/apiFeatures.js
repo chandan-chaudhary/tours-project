@@ -5,14 +5,14 @@ class APIfeatures {
   }
   filter() {
     //FILTERING
-    console.log('req.query: ', this.queryString);
+    // console.log('req.query: ', this.queryString);
     // OBTAIN QUERY
     // we destructured object to new object to manupalte copy and keep original query
     const queryObj = { ...this.queryString };
     const excludedFields = ['sort', 'page', 'fields', 'limit'];
     //deleting feilds matched with excludedfields array
     excludedFields.forEach((el) => delete queryObj[el]);
-    console.log('queryObj: ', queryObj);
+    // console.log('queryObj: ', queryObj);
 
     //ADVANCE FILTERING
     let queryStr = JSON.stringify(queryObj);
@@ -23,7 +23,7 @@ class APIfeatures {
     queryStr = JSON.parse(
       queryStr.replace(/\b(gte|lte|lt|gt)\b/g, (match) => `$${match}`),
     );
-    console.log('queryStr: ', queryStr);
+    // console.log('queryStr: ', queryStr);
     this.query = this.query.find(queryStr);
     return this;
   }
@@ -32,7 +32,7 @@ class APIfeatures {
     //SORTING
     if (this.queryString.sort) {
       const sortQuery = this.queryString.sort.split(',').join(' ');
-      console.log(sortQuery);
+      // console.log(sortQuery);
       this.query = this.query.sort(sortQuery);
     } else {
       //currently no effect in sorting bcoz all data was imported at once
