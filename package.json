@@ -1,7 +1,7 @@
 {
   "name": "nature",
   "version": "1.0.0",
-  "description": "createing natours project",
+  "description": "creating natours project",
   "main": "app.js",
   "scripts": {
     "start": "nodemon server.js",
